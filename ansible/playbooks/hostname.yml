@@ -1,0 +1,7 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: set hostname from inventory
+      hostname:
+        name: '{{ inventory_hostname }}'

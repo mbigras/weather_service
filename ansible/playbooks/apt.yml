@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: update apt cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        

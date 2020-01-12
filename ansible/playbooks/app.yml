@@ -1,0 +1,22 @@
+---
+- hosts: app
+  become: yes
+  vars:
+    recreate: no
+    version: '0.1.5'
+  tasks:
+    - name: download weather app image
+      docker_image:
+        name: mbigras/weather:{{ version }}
+        source: pull
+
+    - name: create, start, and enable weather app container
+      docker_container:
+        name: app
+        image: mbigras/weather:{{ version }}
+        network_mode: host
+        state: started
+        restart_policy: always
+        recreate: '{{ recreate }}'
+        comparisons:
+          '*': strict

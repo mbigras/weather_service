@@ -1,0 +1,33 @@
+---
+- hosts: web
+  become: yes
+  tasks:
+    - name: create nginx installation directory
+      file:
+        path: /opt/nginx
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: create index.html
+      copy:
+        dest: /opt/nginx/index.html
+        owner: root
+        group: root
+        mode: 0644
+        content: |
+          hello from {{ inventory_hostname }}
+
+    - name: create, start, and enable nginx container
+      docker_container:
+        name: nginx
+        image: nginx:1.17.7
+        network_mode: host
+        recreate: yes
+        state: started
+        restart_policy: always
+        volumes:
+          - /opt/nginx/index.html:/usr/share/nginx/html/index.html
+        comparisons:
+          '*': strict
